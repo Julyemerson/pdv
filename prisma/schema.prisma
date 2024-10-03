@@ -20,6 +20,17 @@ model Users {
   updatedAt DateTime @updatedAt
 }
 
+model Clients {
+  id        String      @id @default(uuid())
+  name      String
+  email     String?
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Orders Orders[]
+}
+
 model Products {
   id          String      @id @default(uuid())
   name        String
@@ -37,6 +48,8 @@ model Orders {
   userId      String
   productId   String
   orderItems  OrderItems[]
+  clientId    String
+  client      Clients @relation(fields: [clientId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
