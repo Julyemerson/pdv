@@ -10,20 +10,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Users {
-  id        String      @id @default(uuid())
+  id        String   @id @default(uuid())
   name      String
-  email     String
+  email     String   @unique
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Clients {
-  id        String      @id @default(uuid())
+  id        String   @id @default(uuid())
   name      String
-  email     String?
+  email     String?  @unique
   phone     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -32,7 +31,7 @@ model Clients {
 }
 
 model Products {
-  id          String      @id @default(uuid())
+  id          String   @id @default(uuid())
   name        String
   description String?
   price       Float
@@ -44,15 +43,15 @@ model Products {
 }
 
 model Orders {
-  id          String      @id @default(uuid())
-  userId      String
-  productId   String
-  orderItems  OrderItems[]
-  clientId    String
-  client      Clients @relation(fields: [clientId], references: [id])
-  discount    Float?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String       @id @default(uuid())
+  userId     String
+  productId  String
+  orderItems OrderItems[]
+  clientId   String
+  client     Clients      @relation(fields: [clientId], references: [id])
+  discount   Float?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 }
 
 model OrderItems {
@@ -65,4 +64,3 @@ model OrderItems {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
