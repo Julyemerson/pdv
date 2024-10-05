@@ -1,14 +1,21 @@
-import { OrderItems } from './../../node_modules/.pnpm/@prisma+client@5.20.0_prisma@5.20.0/node_modules/.prisma/client/index.d';
 import {
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { PrismaService } from 'src/database/prisma.service';
-import { error } from 'console';
-import e from 'express';
+
+interface updateOrderData {
+  clientId?: string;
+  discount?: number;
+  userId?: string;
+  items?: {
+    productId: string;
+    quantity: number;
+  }[];
+}
 
 @Injectable()
 export class OrdersService {
@@ -68,19 +75,47 @@ export class OrdersService {
     }
   }
 
-  findAll() {
-    return `This action returns all orders`;
+  async findAll() {
+    return await this.prisma.orders.findMany();
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} order`;
+  async findOneOrder(id: string) {
+    await this.orderExists(id);
+
+    try {
+      return await this.prisma.orders.findUnique({
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
-  update(id: string, data: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
+  async removeOrder(id: string) {
+    await this.orderExists(id);
+
+    try {
+      return await this.prisma.orders.delete({
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} order`;
+  async orderExists(id: string) {
+    const order = await this.prisma.orders.count({
+      where: {
+        id,
+      },
+    });
+
+    if (!order) {
+      throw new NotFoundException('Pedido não encontrado');
+    }
   }
 }
