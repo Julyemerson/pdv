@@ -13,7 +13,7 @@ export class ClientsService {
 
   async create(data: CreateClientDto) {
     try {
-      return this.prisma.clients.create({
+      return await this.prisma.clients.create({
         data,
       });
     } catch (error) {
@@ -23,7 +23,7 @@ export class ClientsService {
 
   async findAll() {
     try {
-      return this.prisma.clients.findMany();
+      return await this.prisma.clients.findMany();
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -32,7 +32,7 @@ export class ClientsService {
   async findOne(id: string) {
     await this.userExists(id);
     try {
-      return this.prisma.clients.findUniqueOrThrow({
+      return await this.prisma.clients.findUniqueOrThrow({
         where: {
           id,
         },
@@ -45,7 +45,7 @@ export class ClientsService {
   async update(id: string, data: UpdateClientDto) {
     await this.userExists(id);
     try {
-      return this.prisma.clients.update({
+      return await this.prisma.clients.update({
         where: { id },
         data,
       });
@@ -58,7 +58,7 @@ export class ClientsService {
     await this.userExists(id);
 
     try {
-      return this.prisma.clients.delete({
+      return await this.prisma.clients.delete({
         where: { id },
       });
     } catch (error) {

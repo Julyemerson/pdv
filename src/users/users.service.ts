@@ -1,26 +1,103 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PrismaService } from 'src/database/prisma.service';
+import * as bcrypt from 'bcrypt';
+
+interface DataUser {
+  email?: string;
+  name?: string;
+  password?: string;
+}
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(data: CreateUserDto) {
+    const salt = await bcrypt.genSalt(10);
+
+    data.password = await bcrypt.hash(data.password, salt);
+
+    try {
+      return await this.prisma.users.create({
+        data,
+      });
+    } catch (error) {}
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    try {
+      return await this.prisma.users.findMany();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    await this.userExists(id);
+
+    try {
+      return await this.prisma.users.findUniqueOrThrow({
+        where: { id },
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, { email, name, password }: UpdateUserDto) {
+    await this.userExists(id);
+
+    const data: DataUser = {};
+
+    if (email) {
+      data.email = email;
+    }
+
+    if (name) {
+      data.name = name;
+    }
+
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+
+      data.password = await bcrypt.hash(password, salt);
+    }
+
+    try {
+      return await this.prisma.users.update({
+        where: { id },
+        data,
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    await this.userExists(id);
+
+    try {
+      return await this.prisma.users.delete({
+        where: { id },
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  async userExists(id: string) {
+    const user = await this.prisma.users.count({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
   }
 }
