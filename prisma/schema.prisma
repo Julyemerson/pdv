@@ -45,11 +45,11 @@ model Products {
 model Orders {
   id         String       @id @default(uuid())
   userId     String
-  productId  String
   orderItems OrderItems[]
   clientId   String
   client     Clients      @relation(fields: [clientId], references: [id])
   discount   Float?
+  total      Float
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
 }
