@@ -59,11 +59,14 @@ export class AuthService {
     const user = await this.prisma.users.findFirst({
       where: {
         email,
-        password,
       },
     });
 
     if (!user) {
+      throw new UnauthorizedException('Usuário ou senha inválidos');
+    }
+
+    if (!(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Usuário ou senha inválidos');
     }
 
