@@ -1,85 +1,154 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Backend PDV (Point of Sale System)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This is a backend API for a Point of Sale (POS) system built using [NestJS](https://nestjs.com/). The project is designed to manage users, clients, products, orders, and order items. It uses Prisma as the ORM and SQLite as the database.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- **User Management**: Create and manage users.
+- **Client Management**: Manage client information.
+- **Product Management**: Add, update, and delete products.
+- **Order Management**: Handle orders and their associated items.
+- **Validation**: Input validation using `class-validator` and `class-transformer`.
+- **Database**: SQLite database with Prisma ORM.
+- **Testing**: Includes unit and end-to-end (e2e) tests using Jest and Supertest.
+- **Code Quality**: Enforced with ESLint and Prettier.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Technologies Used
 
-## Project setup
+- **Framework**: [NestJS](https://nestjs.com/)
+- **Database**: SQLite
+- **ORM**: [Prisma](https://www.prisma.io/)
+- **Validation**: `class-validator`, `class-transformer`
+- **Authentication**: `@nestjs/jwt` (if applicable)
+- **Testing**: Jest, Supertest
+- **Code Quality**: ESLint, Prettier
+- **Dependency Management**: pnpm
+
+## Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone <repository-url>
+   cd backend-pdv
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   pnpm install
+   ```
+
+3. Set up the environment variables:
+
+   Create a `.env` file in the root directory and add the following:
+
+   ```env
+   DATABASE_URL="file:./dev.db"
+   ```
+
+4. Generate the Prisma client:
+
+   ```bash
+   pnpm prisma generate
+   ```
+
+5. Apply database migrations:
+
+   ```bash
+   pnpm prisma migrate dev
+   ```
+
+## Running the Application
+
+### Development
+
+To start the application in development mode:
 
 ```bash
-$ pnpm install
+pnpm start:dev
 ```
 
-## Compile and run the project
+The API will be available at `http://localhost:3000`.
+
+### Production
+
+To build and run the application in production mode:
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+pnpm build
+pnpm start:prod
 ```
 
-## Run tests
+### Testing
+
+Run unit tests:
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+pnpm test
 ```
 
-## Resources
+Run end-to-end (e2e) tests:
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+pnpm test:e2e
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Run tests with coverage:
 
-## Support
+```bash
+pnpm test:cov
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Project Structure
 
-## Stay in touch
+```plaintext
+backend-pdv/
+├── src/
+│   ├── app.module.ts         # Root module
+│   ├── main.ts               # Application entry point
+│   ├── users/                # User module
+│   ├── clients/              # Client module
+│   ├── products/             # Product module
+│   ├── orders/               # Order module
+│   └── order-items/          # Order items module
+├── prisma/
+│   ├── schema.prisma         # Prisma schema
+├── test/
+│   ├── app.e2e-spec.ts       # End-to-end tests
+├── .eslintrc.js              # ESLint configuration
+├── nest-cli.json             # Nest CLI configuration
+├── package.json              # Project metadata and scripts
+├── pnpm-lock.yaml            # Dependency lock file
+└── README.md                 # Project documentation
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Prisma Schema
+
+The database schema is defined in `prisma/schema.prisma`. It includes models for:
+
+- **Users**
+- **Clients**
+- **Products**
+- **Orders**
+- **OrderItems**
+
+## Scripts
+
+- `pnpm start`: Start the application.
+- `pnpm start:dev`: Start the application in watch mode.
+- `pnpm start:prod`: Start the application in production mode.
+- `pnpm build`: Build the application.
+- `pnpm test`: Run all tests.
+- `pnpm test:e2e`: Run end-to-end tests.
+- `pnpm test:cov`: Run tests with coverage.
+- `pnpm lint`: Run ESLint.
+- `pnpm format`: Format code with Prettier.
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+### Developed by **Julyemerson Leonizio**.
